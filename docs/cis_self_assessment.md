@@ -23,7 +23,7 @@ These are the possible results for each control:
 
 - **Pass** - The RKE2 cluster under test passed the audit outlined in the benchmark.
 - **Not Applicable** - The control is not applicable to RKE2 because of how it is designed to operate. The remediation section will explain why this is so.
-- **Not Scored - Operator Dependent** - The control is not scored in the CIS benchmark because it depends on the cluster's usecase or some other variable factor determined by the cluster operator. These controls have been evaluated to ensure RKE2 does not prevent their implementation, but no further configuration or auditing of the cluster under test has been performed for them.
+- **Not Scored - Operator Dependent** - The control is not scored in the CIS benchmark and it depends on the cluster's usecase or some other variable factor determined by the cluster operator. These controls have been evaluated to ensure RKE2 does not prevent their implementation, but no further configuration or auditing of the cluster under test has been performed for them.
 
 <!-- 
 RKE2 is launched as a single process that will first install and launch containerd as a host-level process. It will then launch the kubelet as a host-level process. The reamining Kubernetes control plane components (including etcd) are then launched as static pods, using the kubelet. Configuration of Kubernetes is achieved by passing additional arguments to the RKE2 process via a config file (recommended) or command line arguments.
@@ -47,11 +47,13 @@ The API server pod specification file controls various parameters that set the b
 
 **Result:** Pass
 
-**Remediation:**
-By default, RKE2 creates these files with `644` permissions. No manual remediation needed. File location:
+**Audit:**
 ```bash
-/var/lib/rancher/rke2/agent/pod-manifests/kube-apiserver.yaml
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/kube-apiserver.yaml
+-rw-r--r-- 1 root root 6548 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/kube-apiserver.yaml
 ```
+
+**Remediation:** By default, RKE2 creates these files with `644` permissions. No manual remediation needed.
 
 #### 1.1.2
 Ensure that the API server pod specification file ownership is set to `root:root` (Scored)
@@ -62,11 +64,18 @@ The API server pod specification file controls various parameters that set the b
 
 **Result:** Pass
 
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/kube-apiserver.yaml
+-rw-r--r-- 1 root root 6548 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/kube-apiserver.yaml
+```
+<!--
+**Audit Result:**
+```console
+```
+-->
 **Remediation:**
-By default, RKE2 creates these files with `root:root` ownership. No manual remediation needed. File location:
-```
-/var/lib/rancher/rke2/agent/pod-manifests/kube-apiserver.yaml
-```
+By default, RKE2 creates these files with `root:root` ownership. No manual remediation needed.
 
 #### 1.1.3
 Ensure that the controller manager pod specification file permissions are set to `644` or more restrictive (Scored)
@@ -77,11 +86,14 @@ The controller manager pod specification file controls various parameters that s
 
 **Result:** Pass
 
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/kube-controller-manager.yaml
+-rw-r--r-- 1 root root 3131 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/kube-controller-manager.yaml
+```
+
 **Remediation:**
-By default, RKE2 creates these files with `644` permissions. No manual remediation needed. File location:
-```
-/var/lib/rancher/rke2/agent/pod-manifests/kube-controller-manager.yaml
-```
+By default, RKE2 creates these files with `644` permissions. No manual remediation needed.
 
 #### 1.1.4
 Ensure that the controller manager pod specification file ownership is set to `root:root` (Scored)
@@ -92,8 +104,14 @@ The controller manager pod specification file controls various parameters that s
 
 **Result:** Pass
 
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/kube-controller-manager.yaml
+-rw-r--r-- 1 root root 3131 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/kube-controller-manager.yaml
+```
+
 **Remediation:**
-RKE doesn’t require or maintain a configuration file for the controller manager. All configuration is passed in as arguments at container run time.
+By default, RKE2 creates these files with `root:root` ownership. No manual remediation needed.
 
 #### 1.1.5
 Ensure that the scheduler pod specification file permissions are set to `644` or more restrictive (Scored)
@@ -102,10 +120,16 @@ Ensure that the scheduler pod specification file permissions are set to `644` or
 The scheduler pod specification file controls various parameters that set the behavior of the Scheduler service in the master node. You should restrict its file permissions to maintain the integrity of the file. The file should be writable by only the administrators on the system.
 </details>
 
-**Result:** Not Applicable
+**Result:** Pass
+
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/kube-scheduler.yaml
+-rw-r--r-- 1 root root 1914 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/kube-scheduler.yaml
+```
 
 **Remediation:**
-RKE doesn’t require or maintain a configuration file for the scheduler. All configuration is passed in as arguments at container run time.
+By default, RKE2 creates these files with `644` permissions. No manual remediation needed.
 
 #### 1.1.6
 Ensure that the scheduler pod specification file ownership is set to `root:root` (Scored)
@@ -114,10 +138,16 @@ Ensure that the scheduler pod specification file ownership is set to `root:root`
 The scheduler pod specification file controls various parameters that set the behavior of the kube-scheduler service in the master node. You should set its file ownership to maintain the integrity of the file. The file should be owned by root:root.
 </details>
 
-**Result:** Not Applicable
+**Result:** Pass
+
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/kube-scheduler.yaml
+-rw-r--r-- 1 root root 1914 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/kube-scheduler.yaml
+```
 
 **Remediation:**
-RKE doesn’t require or maintain a configuration file for the scheduler. All configuration is passed in as arguments at container run time.
+By default, RKE2 creates these files with `root:root` ownership. No manual remediation needed.
 
 #### 1.1.7
 Ensure that the etcd pod specification file permissions are set to `644` or more restrictive (Scored)
@@ -126,10 +156,16 @@ Ensure that the etcd pod specification file permissions are set to `644` or more
 The etcd pod specification file /etc/kubernetes/manifests/etcd.yaml controls various parameters that set the behavior of the etcd service in the master node. etcd is a highly- available key-value store which Kubernetes uses for persistent storage of all of its REST API object. You should restrict its file permissions to maintain the integrity of the file. The file should be writable by only the administrators on the system.
 </details>
 
-**Result:** Not Applicable
+**Result:** Pass
+
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/etcd.yaml
+-rw-r--r-- 1 root root 2762 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/etcd.yaml
+```
 
 **Remediation:**
-RKE doesn’t require or maintain a configuration file for etcd. All configuration is passed in as arguments at container run time.
+By default, RKE2 creates these files with `644` permissions. No manual remediation needed.
 
 #### 1.1.8
 Ensure that the etcd pod specification file ownership is set to `root:root` (Scored)
@@ -138,10 +174,16 @@ Ensure that the etcd pod specification file ownership is set to `root:root` (Sco
 The etcd pod specification file /etc/kubernetes/manifests/etcd.yaml controls various parameters that set the behavior of the etcd service in the master node. etcd is a highly- available key-value store which Kubernetes uses for persistent storage of all of its REST API object. You should set its file ownership to maintain the integrity of the file. The file should be owned by root:root.
 </details>
 
-**Result:** Not Applicable
+**Result:** Pass
+
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/agent/pod-manifests/etcd.yaml
+-rw-r--r-- 1 root root 2762 Sep 25 02:22 /var/lib/rancher/rke2/agent/pod-manifests/etcd.yaml
+```
 
 **Remediation:**
-RKE doesn’t require or maintain a configuration file for etcd. All configuration is passed in as arguments at container run time.
+By default, RKE2 creates these files with `root:root` ownership. No manual remediation needed.
 
 #### 1.1.9
 Ensure that the Container Network Interface file permissions are set to 644 or more restrictive (Not Scored)
@@ -150,6 +192,17 @@ Ensure that the Container Network Interface file permissions are set to 644 or m
 Container Network Interface provides various networking options for overlay networking. You should consult their documentation and restrict their respective file permissions to maintain the integrity of those files. Those files should be writable by only the administrators on the system.
 </details>
 
+**Result:** Pass
+
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/server/manifests/rke2-canal-chart.yml
+-rw-r--r-- 1 root root 8147 Sep 25 02:22 /var/lib/rancher/rke2/server/manifests/rke2-canal-chart.yml
+```
+
+**Remediation:**
+RKE2 deploys the default CNI, Canal, using a Helm chart. The chart is defined as a custom resource in a file with `644` permissions. No manual remediation needed.
+
 #### 1.1.10
 Ensure that the Container Network Interface file ownership is set to root:root (Not Scored)
 <details>
@@ -157,53 +210,34 @@ Ensure that the Container Network Interface file ownership is set to root:root (
 Container Network Interface provides various networking options for overlay networking. You should consult their documentation and restrict their respective file permissions to maintain the integrity of those files. Those files should be owned by root:root.
 </details>
 
+**Result:** Pass
+
+**Audit:**
+```bash
+ls -l /var/lib/rancher/rke2/server/manifests/rke2-canal-chart.yml
+-rw-r--r-- 1 root root 8147 Sep 25 02:22 /var/lib/rancher/rke2/server/manifests/rke2-canal-chart.yml
+```
+
+**Remediation:**
+RKE2 deploys the default CNI, Canal, using a Helm chart. The chart is defined as a custom resource in a file with `root:root` ownership. No manual remediation needed.
+
 #### 1.1.11
 Ensure that the etcd data directory permissions are set to 700 or more restrictive (Scored)
 <details>
 <summary>Rationale</summary>
 etcd is a highly-available key-value store used by Kubernetes deployments for persistent storage of all of its REST API objects. This data directory should be protected from any unauthorized reads or writes. It should not be readable or writable by any group members or the world.
 </details>
-Ensure that the etcd data directory permissions are set to `700` or more restrictive (Scored)
 
-**Result:** Pass
+**Result:** FAIL TODO!!!
+
+**Audit:**
+```bash
+stat -c %a /var/lib/rancher/rke2/server/db/etcd
+755
+```
 
 **Remediation:**
-On the etcd server node, get the etcd data directory, passed as an argument `--data-dir`,
-from the below command:
-
-``` bash
-ps -ef | grep etcd
-```
-
-Run the below command (based on the etcd data directory found above). For example,
-
-``` bash
-chmod 700 /var/lib/etcd
-```
-
-**Audit Script:** 1.1.11.sh
-
-```
-#!/bin/bash -e
-
-etcd_bin=${1}
-
-test_dir=$(ps -ef | grep ${etcd_bin} | grep -- --data-dir | sed 's%.*data-dir[= ]\([^ ]*\).*%\1%')
-
-docker inspect etcd | jq -r '.[].HostConfig.Binds[]' | grep "${test_dir}" | cut -d ":" -f 1 | xargs stat -c %a
-```
-
-**Audit Execution:**
-
-```
-./1.1.11.sh etcd
-```
-
-**Expected result**:
-
-```
-'700' is equal to '700'
-```
+RKE2 manages the etcd data directory and sets its permissions to 700. No manual remediation needed.
 
 #### 1.1.12
 Ensure that the etcd data directory ownership is set to `etcd:etcd` (Scored)
@@ -442,9 +476,9 @@ exit
 **Audit Execution:**
 
 ```
-./check_files_permissions.sh '/etc/kubernetes/ssl/*.pem'
+./check_files_permissions.sh '/etc/kubernetes/ssl/\*.pem'
 ```
-
+<!-- TODO escaped asterisk -->
 **Expected result**:
 
 ```
@@ -469,12 +503,12 @@ chmod -R 600 /etc/kubernetes/ssl/certs/serverca
 ```
 
 **Audit Script:** 1.1.21.sh
-
+<!-- TODO escaped asterisk -->
 ```
 #!/bin/bash -e
 check_dir=${1:-/etc/kubernetes/ssl}
 
-for file in $(find ${check_dir} -name "*key.pem"); do
+for file in $(find ${check_dir} -name "\*key.pem"); do
 file_permission=$(stat -c %a ${file})
 if [[ "${file_permission}" == "600" ]]; then
 continue
@@ -511,6 +545,10 @@ When enabled, requests that are not rejected by other configured authentication 
 
 If you are using RBAC authorization, it is generally considered reasonable to allow anonymous access to the API Server for health checks and discovery purposes, and hence this recommendation is not scored. However, you should consider whether anonymous discovery is an acceptable risk for your purposes.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 
 #### 1.2.2
 Ensure that the `--basic-auth-file` argument is not set (Scored)
@@ -750,6 +788,10 @@ Using `EventRateLimit` admission control enforces a limit on the number of event
 Note: This is an Alpha feature in the Kubernetes 1.15 release.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 1.2.11
 Ensure that the admission control plugin `AlwaysAdmit` is not set (Scored)
 <details>
@@ -786,12 +828,20 @@ Setting admission control policy to `AlwaysPullImages` forces every new pod to p
 
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 1.2.13
 Ensure that the admission control plugin SecurityContextDeny is set if PodSecurityPolicy is not used (Not Scored)
 <details>
 <summary>Rationale</summary>
 SecurityContextDeny can be used to provide a layer of security for clusters which do not have PodSecurityPolicies enabled.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 #### 1.2.14
 Ensure that the admission control plugin `ServiceAccount` is set (Scored)
 <details>
@@ -1434,6 +1484,10 @@ Ensure that the API Server only makes use of Strong Cryptographic Ciphers (Not S
 TLS ciphers have had a number of known vulnerabilities and weaknesses, which can reduce the protection provided by them. By default Kubernetes supports a number of TLS ciphersuites including some that have security concerns, weakening the protection provided.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 ### 1.3 Controller Manager
 
 #### 1.3.1
@@ -1567,7 +1621,7 @@ Providing the root certificate for the API server's serving certificate to the c
 
 **Remediation:**
 Edit the Controller Manager pod specification file `/etc/kubernetes/manifests/kube-controller-manager.yaml`
-on the master node and set the `--root-ca-file` parameter to the certificate bundle file`.
+on the master node and set the `--root-ca-file` parameter to the certificate bundle file.
 
 ``` bash
 --root-ca-file=<path/to/file>
@@ -1889,6 +1943,10 @@ etcd is a highly available key-value store used by Kubernetes deployments for pe
 Authentication to etcd is based on whether the certificate presented was issued by a trusted certificate authority. There is no checking of certificate attributes such as common name or subject alternative name. As such, if any attackers were able to gain access to any certificate issued by the trusted certificate authority, they would be able to gain full access to the etcd database.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 ## 3 Control Plane Configuration
 ### 3.1 Authentication and Authorization
 #### 3.1.1
@@ -1897,6 +1955,11 @@ Client certificate authentication should not be used for users (Not Scored)
 <summary>Rationale</summary>
 With any authentication mechanism the ability to revoke credentials if they are compromised or no longer required, is a key control. Kubernetes client certificate authentication does not allow for this due to a lack of support for certificate revocation.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
+
 ### 3.2 Logging
 
 #### 3.2.1
@@ -1939,6 +2002,11 @@ Ensure that the audit policy covers key security concerns (Not Scored)
 <summary>Rationale</summary>
 Security audit logs should cover access and modification of key resources in the cluster, to enable them to form an effective part of a security environment.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
+
 
 ## 4 Worker Node Security Configuration
 ### 4.1 Worker Node Configuration Files
@@ -2394,7 +2462,7 @@ systemctl restart kubelet.service
 ```
 
 #### 4.2.6
-Ensure that the ```--protect-kernel-defaults``` argument is set to `true` (Scored)
+Ensure that the `--protect-kernel-defaults` argument is set to `true` (Scored)
 <details>
 <summary>Rationale</summary>
 Kernel parameters are usually tuned and hardened by the system administrators before putting the systems into production. These parameters protect the kernel and the system. Your kubelet kernel defaults that rely on such parameters should be appropriately set to match the desired secured system state. Ignoring this could potentially lead to running pods with undesired kernel behavior.
@@ -2484,12 +2552,20 @@ Ensure that the --hostname-override argument is not set (Not Scored)
 Overriding hostnames could potentially break TLS setup between the kubelet and the apiserver. Additionally, with overridden hostnames, it becomes increasingly difficult to associate logs with a particular node and process them for security analytics. Hence, you should setup your kubelet nodes with resolvable FQDNs and avoid overriding the hostnames with IPs.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 4.2.9
 Ensure that the --event-qps argument is set to 0 or a level which ensures appropriate event capture (Not Scored)
 <details>
 <summary>Rationale</summary>
 It is important to capture all events and not restrict event creation. Events are an important source of security information and analytics that ensure that your environment is consistently monitored using the event data.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 
 #### 4.2.10
 Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate (Scored)
@@ -2600,6 +2676,10 @@ Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers (Not Scor
 TLS ciphers have had a number of known vulnerabilities and weaknesses, which can reduce the protection provided by them. By default Kubernetes supports a number of TLS ciphersuites including some that have security concerns, weakening the protection provided.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 ## 5 Kubernetes Policies
 ### 5.1 RBAC and Service Accounts
 
@@ -2610,6 +2690,10 @@ Ensure that the cluster-admin role is only used where required (Not Scored)
 Kubernetes provides a set of default roles where RBAC is used. Some of these roles such as `cluster-admin` provide wide-ranging privileges which should only be applied where absolutely necessary. Roles such as `cluster-admin` allow super-user access to perform any action on any resource. When used in a `ClusterRoleBinding`, it gives full control over every resource in the cluster and in all namespaces. When used in a `RoleBinding`, it gives full control over every resource in the rolebinding's namespace, including the namespace itself.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 5.1.2
 Ensure that the cluster-admin role is only used where required (Not Scored)
 <details>
@@ -2617,18 +2701,30 @@ Ensure that the cluster-admin role is only used where required (Not Scored)
 Inappropriate access to secrets stored within the Kubernetes cluster can allow for an attacker to gain additional access to the Kubernetes cluster or external resources whose credentials are stored as secrets.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 5.1.3
 Minimize wildcard use in Roles and ClusterRoles (Not Scored)
 <details>
 <summary>Rationale</summary>
 The principle of least privilege recommends that users are provided only the access required for their role and nothing more. The use of wildcard rights grants is likely to provide excessive rights to the Kubernetes API.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 #### 5.1.4
 Minimize access to create pods (Not Scored)
 <details>
 <summary>Rationale</summary>
 The ability to create pods in a cluster opens up possibilities for privilege escalation and should be restricted, where possible.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 #### 5.1.5
 Ensure that default service accounts are not actively used. (Scored)
 <details>
@@ -2704,6 +2800,10 @@ Mounting service account tokens inside pods can provide an avenue for privilege 
 Avoiding mounting these tokens removes this attack avenue.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 ### 5.2 Pod Security Policies
 
 #### 5.2.1
@@ -2716,6 +2816,10 @@ There should be at least one PodSecurityPolicy (PSP) defined which does not perm
 
 If you need to run privileged containers, this should be defined in a separate PSP and you should carefully check RBAC controls to ensure that only limited service accounts and users are given permission to access that PSP.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 #### 5.2.2
 Minimize the admission of containers wishing to share the host process ID namespace (Scored)
 <details>
@@ -2846,6 +2950,10 @@ There should be at least one PodSecurityPolicy (PSP) defined which does not perm
 If you need to run root containers, this should be defined in a separate PSP and you should carefully check RBAC controls to ensure that only limited service accounts and users are given permission to access that PSP.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 5.2.7
 Minimize the admission of containers with the NET_RAW capability (Not Scored)
 <details>
@@ -2859,6 +2967,10 @@ There should be at least one PodSecurityPolicy (PSP) defined which prevents cont
 If you need to run containers with this capability, this should be defined in a separate PSP and you should carefully check RBAC controls to ensure that only limited service accounts and users are given permission to access that PSP.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 5.2.8
 Minimize the admission of containers with added capabilities (Not Scored)
 <details>
@@ -2870,6 +2982,10 @@ There should be at least one PodSecurityPolicy (PSP) defined which prevents cont
 If you need to run containers with additional capabilities, this should be defined in a separate PSP and you should carefully check RBAC controls to ensure that only limited service accounts and users are given permission to access that PSP.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 5.2.9
 Minimize the admission of containers with capabilities assigned (Not Scored)
 <details>
@@ -2879,6 +2995,10 @@ Containers run with a default set of capabilities as assigned by the Container R
 In many cases applications running in containers do not require any capabilities to operate, so from the perspective of the principal of least privilege use of capabilities should be minimized.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 ### 5.3 Network Policies and CNI
 
 ### 5.3.1
@@ -2887,6 +3007,10 @@ Ensure that the CNI in use supports Network Policies (Not Scored)
 <summary>Rationale</summary>
 Kubernetes network policies are enforced by the CNI plugin in use. As such it is important to ensure that the CNI plugin supports both Ingress and Egress network policies.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 
 ### 5.3.2
 Ensure that all Namespaces have Network Policies defined (Scored)
@@ -2945,12 +3069,20 @@ Prefer using secrets as files over secrets as environment variables (Not Scored)
 <summary>Rationale</summary>
 It is reasonably common for application code to log out its environment (particularly in the event of an error). This will include any secret values passed in as environment variables, so secrets can easily be exposed to any user or entity who has access to the logs.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 #### 5.4.2
 Consider external secret storage (Not Scored)
 <details>
 <summary>Rationale</summary>
 Kubernetes supports secrets as first-class objects, but care needs to be taken to ensure that access to secrets is carefully limited. Using an external secrets provider can ease the management of access to secrets, especially where secrests are used across both Kubernetes and non-Kubernetes environments.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 
 ### 5.5 Extensible Admission Control
 #### 5.5.1
@@ -2959,6 +3091,10 @@ Configure Image Provenance using ImagePolicyWebhook admission controller (Not Sc
 <summary>Rationale</summary>
 Kubernetes supports plugging in provenance rules to accept or reject the images in your deployments. You could configure such rules to ensure that only approved images are deployed in the cluster.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 
 ### 5.6 Omitted
 The v1.5.1 guide skips 5.6 and goes from 5.5 to 5.7. We are including it here merely for explanation.
@@ -2972,12 +3108,20 @@ Create administrative boundaries between resources using namespaces (Not Scored)
 Limiting the scope of user permissions can reduce the impact of mistakes or malicious activities. A Kubernetes namespace allows you to partition created resources into logically named groups. Resources created in one namespace can be hidden from other namespaces. By default, each resource created by a user in Kubernetes cluster runs in a default namespace, called default. You can create additional namespaces and attach resources and users to them. You can use Kubernetes Authorization plugins to create policies that segregate access to namespace resources between different users.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 5.7.2
 Ensure that the seccomp profile is set to docker/default in your pod definitions (Not Scored)
 <details>
 <summary>Rationale</summary>
 Seccomp (secure computing mode) is used to restrict the set of system calls applications can make, allowing cluster administrators greater control over the security of workloads running in the cluster. Kubernetes disables seccomp profiles by default for historical reasons. You should enable it to ensure that the workloads have restricted actions available within the container.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 
 #### 5.7.3
 Apply Security Context to Your Pods and Containers (Not Scored)
@@ -2986,12 +3130,20 @@ Apply Security Context to Your Pods and Containers (Not Scored)
 A security context defines the operating system security settings (uid, gid, capabilities, SELinux role, etc..) applied to a container. When designing your containers and pods, make sure that you configure the security context for your pods, containers, and volumes. A security context is a property defined in the deployment yaml. It controls the security parameters that will be assigned to the pod/container/volume. There are two levels of security context: pod level security context, and container level security context.
 </details>
 
+**Result:** Pass
+
+**Remediation:**
+
 #### 5.7.4
 The default namespace should not be used (Scored)
 <details>
 <summary>Rationale</summary>
 Resources in a Kubernetes cluster should be segregated by namespace, to allow for security controls to be applied at that level and to make it easier to manage resources.
 </details>
+
+**Result:** Pass
+
+**Remediation:**
 
 **Result:** Pass
 
