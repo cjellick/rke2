@@ -231,6 +231,7 @@ func (s *StaticPodConfig) ETCD(args executor.ETCDConfig) error {
 		HealthProto: "HTTP",
 	}
 
+	logrus.Warnf("CAJ I AM IN ETCD BUILDER")
 	if s.CISMode {
 		etcdUser, err := user.Lookup("etcd")
 		if err != nil {
@@ -244,6 +245,7 @@ func (s *StaticPodConfig) ETCD(args executor.ETCDConfig) error {
 		if err != nil {
 			return err
 		}
+		logrus.Warnf("CAJ UID %v %v GID %v %v %v %v", uid, &uid, gid, &gid)
 		if spa.SecurityContext == nil {
 			spa.SecurityContext = &v1.PodSecurityContext{}
 		}
@@ -267,7 +269,7 @@ func (s *StaticPodConfig) ETCD(args executor.ETCDConfig) error {
 			}
 		}
 	}
-
+	logrus.Warnf("CAJ its set as: %v -- %v -- %v", spa.SecurityContext, spa.SecurityContext.RunAsUser, spa.SecurityContext.RunAsGroup)
 	return staticpod.Run(s.ManifestsDir, spa)
 }
 

@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"os"
@@ -36,6 +37,7 @@ type Args struct {
 }
 
 func Run(dir string, args Args) error {
+	logrus.Warnf("CAJ Run its set as: %v -- %v -- %v", args.SecurityContext, args.SecurityContext.RunAsUser, args.SecurityContext.RunAsGroup)
 	if cmds.AgentConfig.EnableSELinux {
 		if args.SecurityContext == nil {
 			args.SecurityContext = &v1.PodSecurityContext{}
@@ -102,6 +104,7 @@ func hashFiles(files []string) (string, error) {
 }
 
 func pod(args Args) (*v1.Pod, error) {
+	logrus.Warnf("CAJ pod pre set as: %v -- %v -- %v", args.SecurityContext, args.SecurityContext.RunAsUser, args.SecurityContext.RunAsGroup)
 	filehash, err := hashFiles(args.Files)
 	if err != nil {
 		return nil, err
@@ -192,6 +195,7 @@ func pod(args Args) (*v1.Pod, error) {
 	addVolumes(p, args.Dirs, true)
 	addVolumes(p, args.Files, false)
 
+	logrus.Warnf("CAJ The pod: %v -- %v -- %v", p.Spec.SecurityContext, p.Spec.SecurityContext.RunAsUser, p.Spec.SecurityContext.RunAsGroup)
 	return p, nil
 }
 
